@@ -50,7 +50,7 @@ DNAcycP supports two modes of input: FASTA format (with sequence name lines begi
 
 To call FASTA format mode, specify argument `fasta`, followed by input file and base name (path) of output. For each sequence of length n>=50 bp, DNAcycP predicts the C-score for every 50 bp. Regardless of the input sequence format the first C-score in the output file corresponds to the sequence from position 1-50, second for 2-51 and so forth. Output of each sequence is a text file with columns `position` and `c-score`, stored in an individual file.
 ```bash
-    dnacycp-cli fasta <inputfile> <basename>
+dnacycp-cli fasta <inputfile> <basename>
 ```
 Example 1:
 ```bash
