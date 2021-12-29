@@ -70,3 +70,11 @@ dnacycp-cli txt data/raw/ex2.txt ex2
   * `<inputfile>`: input file name
   * `<basename>`: prediction output file name base
   * `-h`: show help screen 
+
+
+### Python package usage
+```python
+from dnacycp import cycle_fasta, cycle_txt
+cycle_fasta("data/raw/ex1.fasta","example1")
+cycle_txt("data/raw/ex2.txt","example2")
+```
