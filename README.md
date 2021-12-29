@@ -59,7 +59,7 @@ dnacycp-cli fasta data/raw/ex1.fasta ex2
 
 To call TEXT format mode, specify argument `txt`, followed by input file and base name (path) of output. In TEXT format, each line (can be of different length) in the file is regarded as one input sequence for prediction. 
 ```bash
-    dnacycp-cli txt <inputfile> <basename>
+dnacycp-cli txt <inputfile> <basename>
 ```
 Example 2:
 ```bash
