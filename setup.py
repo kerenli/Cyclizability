@@ -3,6 +3,7 @@ from setuptools import setup
 setup(name='dnacycp',
       packages=['dnacycp'],
       version='0.0.1dev1',
+      python_requires='>3.7.0',
       install_requires=[
       'numpy==1.21.5',
       'pandas==1.3.5',
