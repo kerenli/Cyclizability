@@ -44,6 +44,25 @@ Experimented various deep learning architectures on different data sets, the fin
 * `numpy==1.21.5`
 * `docopt`
 
+## Installation
+
+DNAcycP requires specific versions of dependencies. It is recommended to install and run DNAcycP in a virtual enviorment. For example, suppose the downloaded DNAcycP package unpacked as a folder `dnacycp-main`. We can install DNAcycP in a virtual enviorment as below:
+```bash
+cd dnacycp-main
+python3 -m venv env
+source env/bin/activate test
+pip install -e .
+```
+
+Run `dnacycp-cli ` directly to see whether it is installed properly.
+```bash
+dnacycp-cli 
+```
+
+After call of DNAcycP, you may want to close the virtual enviorment by using
+```bash
+deactivate
+```
 ## Usage
 
 DNAcycP supports two modes of input: FASTA format (with sequence name lines beginning with “>”) and plain TEXT format.
