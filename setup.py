@@ -4,11 +4,11 @@ setup(name='dnacycp',
       packages=['dnacycp'],
       version='0.0.1dev1',
       install_requires=[
-      'numpy',
-      'pandas',
-      'tensorflow',
-      'keras',
-      'bio',
+      'numpy==1.21.5',
+      'pandas==1.3.5',
+      'tensorflow==2.7.0',
+      'keras==2.7.0',
+      'bio==1.3.3',
       'docopt'
       ],
       entry_points={
