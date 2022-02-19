@@ -1,8 +1,8 @@
 """DNAcycP - DNA Sequence Cyclizability Prediction
 
 Usage:
-    dnacycp-cli fasta <inputfile> <basename>
-    dnacycp-cli txt <inputfile> <basename>
+    dnacycp-cli -f <inputfile> <basename>
+    dnacycp-cli -t <inputfile> <basename>
     dnacycp-cli (-h | --help)
     
 Arguments:
@@ -11,6 +11,8 @@ Arguments:
     
 Options:
     -h --help   Show this screen.
+    -f          FASTA mode.
+    -t          TXT mode.
     
 """
 from docopt import docopt
@@ -25,10 +27,10 @@ def main():
     arguments = docopt(__doc__)
     print("Input file: "+arguments['<inputfile>'])
 
-    if arguments['fasta']:
+    if arguments['-f']:
         cycle_fasta(arguments['<inputfile>'],
             arguments['<basename>'])
-    elif arguments['txt']:
+    elif arguments['-t']:
         cycle_txt(arguments['<inputfile>'],
             arguments['<basename>'])
             
