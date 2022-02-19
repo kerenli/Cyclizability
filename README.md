@@ -42,7 +42,7 @@ Experimented various deep learning architectures on different data sets, the fin
 * `keras==2.7.0`
 * `pandas==1.3.5`
 * `numpy==1.21.5`
-* `docopt`
+* `docopt==0.6.2`
 
 ## Installation
 
@@ -63,33 +63,41 @@ After call of DNAcycP, you may want to close the virtual environment by using
 ```bash
 deactivate
 ```
+
+To reuse DNAcycP in the already set virtual environment, run
+```bash
+cd dnacycp-main
+source env/bin/activate test
+```
+
 ## Usage
 
 DNAcycP supports two modes of input: FASTA format (with sequence name lines beginning with “>”) and plain TEXT format.
 
-To call FASTA format mode, specify argument `fasta`, followed by input file and base name (path) of output. For each sequence of length n>=50 bp, DNAcycP predicts the C-score for every 50 bp. Regardless of the input sequence format the first C-score in the output file corresponds to the sequence from position 1-50, second for 2-51 and so forth. Output of each sequence is a text file with columns `position` and `c-score`, stored in an individual file.
+To call FASTA format mode, specify argument `-f`, followed by input file and base name (path) of output. For each sequence of length n>=50 bp, DNAcycP predicts the C-score for every 50 bp. Regardless of the input sequence format the first C-score in the output file corresponds to the sequence from position 1-50, second for 2-51 and so forth. Output of each sequence is a text file with columns `position` and `c-score`, stored in an individual file.
 ```bash
-dnacycp-cli fasta <inputfile> <basename>
+dnacycp-cli -f <inputfile> <basename>
 ```
 Example 1:
 ```bash
-dnacycp-cli fasta data/raw/ex1.fasta ex2
+dnacycp-cli -f data/raw/ex1.fasta ex1
 ```
 
-To call TEXT format mode, specify argument `txt`, followed by input file and base name (path) of output. In TEXT format, each line (can be of different length) in the file is regarded as one input sequence for prediction. 
+To call TEXT format mode, specify argument `-t`, followed by input file and base name (path) of output. In TEXT format, each line (can be of different length) in the file is regarded as one input sequence for prediction. 
 ```bash
-dnacycp-cli txt <inputfile> <basename>
+dnacycp-cli -t <inputfile> <basename>
 ```
 Example 2:
 ```bash
-dnacycp-cli txt data/raw/ex2.txt ex2
+dnacycp-cli -t data/raw/ex2.txt ex2
 ```
 
 ### Arguments:   
   * `<inputfile>`: input file name
   * `<basename>`: prediction output file name base
   * `-h`: show help screen 
-
+  * `-f`: FASTA format mode 
+  * `-t`: TEXT format mode 
 
 ### Python package usage
 ```python
