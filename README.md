@@ -1,41 +1,32 @@
-# DNAcycP: A Deep Learning Tool for DNA Cyclizability Prediction 
+DNAcycP Python package 
+================
 
-## DNA bendability and DNAcycP
+**Maintainer**: Ji-Ping Wang, \<<jzwang@northwestern.edu>\>; Keren Li, \<<keren.li@northwestern.edu>\>
 
-DNA bendability is one fundamental mechanic property that affects various cellular functions. Recently a high throughput assay named loop-seq was developed to allow measuring of intrinsic cyclizability of massive DNA fragments simultaneously (Basu et al 2021). Using the loop-seq data, we develop a software tool, DNAcycP, based on a deep-learning approach for intrinsic DNA cyclizability prediction. We develop a computational tool named DNAcycP based on a deep learning model. DNAcycP prediction is solely based on DNA sequence and it features simplicity and efficiency in usage. 
+**Licence**: GPLv3
 
-DNAcycP predicts intrinsic DNA cyclizability with high fidelity compared to loop-seq data. Using an independent dataset from an in vitro study of DNA looping propensity (Rosanio et al 2015) we further verified the predicted cyclizability score, termed C-score, can well distinguish DNA fragments with different looping propensity. We applied DNAcycP to multiple species ranging from bacteria to mammals, and found predicted DNA cyclizability scores differ in magnitude between species, while preserving the same patterns at nucleosome dyad-proximal regions. Additionally, DNAcycP reveals intriguing cyclizability patterns at transcription factor binding sites. In particular at CTCF site, the cyclizability is substantially elevated and well preserved across species.
+**Cite DNAcycP package**:
 
-## Reference
-If you use this code, please cite the following [paper]()
+Li, K., Carroll, M., Vafabakhsh, R., Wang, X.A. and Wang, J.-P., DNAcycP: A Deep Learning Tool for DNA Cyclizability Prediction, *Nucleic Acids Research*, 2021
 
-    @inproceedings{dnacycp2021,
-       author = {Li, K. and Carroll, M. and Vafabakhsh, R. and Wang, X.A. and Wang, J.P.},
-        title = "{DNAcycP: A Deep Learning Tool for DNA Cyclizability Prediction}",
-        year = 2021,
-    }
+## What is DNAcycP?
 
-* Basu, A., Bobrovnikov, D.G., Qureshi, Z., Kayikcioglu, T., Ngo, T.T.M., Ranjan, A., Eustermann, S., Cieza, B., Morgan, M.T., Hejna, M. et al. (2021) Measuring DNA mechanics on the genome scale. Nature, 589, 462-467.
-* Rosanio, G., Widom, J. and Uhlenbeck, O.C. (2015) In vitro selection of DNAs with an increased propensity to form small circles. Biopolymers, 103, 303-320.
-* Brogaard, K., Xi, L., Wang, J.P. and Widom, J. (2012) A map of nucleosome positions in yeast at base-pair resolution. Nature, 486, 496-501.
+**DNAcycP**, short for **DNA** **cyc**lizablity **P**rediction, is a Python package for accurate predict of DNA intrinsic cyclizablity score. It was built upon a deep learning architecture with a hybrid of Inception and Residual network structure and an LSTM layer. DNAcycP was trained based on loop-seq data from Basu et al 2021 (see below). The predicted score, termed **C-score** achieves high accuracy compared to the experimentally measured cyclizablity score by loop-seq assay.
+
+## Available format of DNAcycP
+
+DANcycP is available in two formats: A web server available at http://DNAcycP.stats.northwestern.edu for real-time prediction and visualization of C-score up to 20K bp, and a standalone Python package available for free download from https://github.com/jipingw/DNAcycP. 
+
 
 ## Architecture of DNAcycP
 
-DNAcycP takes the one-hot encoding of every 50 bp DNA sequence and its reverse complement as input. The core of DNAcycP is a deep learning architecture pipeline mixed with Inception-ResNet structure and an LSTM layer (IR+LSTM, Fig 1b) that processes the sequence and its reverse complement separately, the results from which are averaged and detrended to reach the predicted intrinsic score. (Fig 1a)
+The core of DNAcycP is a deep learning architecture mixed with an Inception-ResNet structure and an LSTM layer (IR+LSTM, Fig 1b) that processes the sequence and its reverse complement separately, the results from which are averaged and detrended to reach the predicted intrinsic score. (Fig 1a).
 
-IR+LSTM starts with a convolutional layer for dimension reduction such that the encoded sequence space is reduced from 2D to 1D. The output is fed into an inception module that contains two parallel branches, each having two sequentially connected convolutional layers with branch-specific kernels to capture sequence features of different scale. The first branch has kernel dimension 3x1 for both layers and the second has kernel dimension 11x1 and 21x1 sequentially. The output of the inception module is combined by concatenation and added back to the input of the inception module to form a short circuit or residual network. After a 2x1 max-pooling, a batch-normalization and a dropout layers, the resulting layer is then passed onto an LSTM layer with 20 hidden memory units, followed by a dropout layer with a ratio of 0.2. Finally, the IR+LSTM concludes with a dense layer to predict output with linear activation function. The ReLU function was applied to the output of each convolution layers, followed subsequently by 2x1 max-pooling (except first convolutional layer on each branch), batch-normalization and a dropout with a ratio of 0.2. The stride was equal to 1 throughout. The different kernel dimensions in the inception branches were chosen for the consideration to capture sequence properties including codon, poly-AT tracks or 10-bp periodicity of dinucleotide motifs that have been shown in the literature to affect DNA sequence flexibility (see Results). The LSTM layer further provides a holistic capturing of sequencing information in the scale of entire input sequence length such as the strength of periodicity of key dinucleotide motifs and their phase angles etc.
+IR+LSTM starts with a convolutional layer for dimension reduction such that the encoded sequence space is reduced from 2D to 1D. The output is fed into an inception module that contains two parallel branches, each having two sequentially connected convolutional layers with branch-specific kernels to capture sequence features of different scale. The first branch has kernel dimension 3x1 for both layers and the second has kernel dimension 11x1 and 21x1 sequentially. The output of the inception module is combined by concatenation and added back to the input of the inception module to form a short circuit or residual network. Finally, the IR+LSTM concludes with a dense layer to predict output with linear activation function. 
 
 ![A diagram of DNAcycP.](./figures/Figure1.png)
 
-## Relevant experimental data sets for model training
-
-We considered five loop-seq data sets from Basu et al (2021) for model training and comparisons,  including: 1. S. cerevisiae nucleosome library of 19,907 different sequences of 50 bp selected from immediate upstream or downstream of the dyads (dyads not included) of 10,000 nucleosomes with highest NCP scores from Brogaard et al (2012) in S. cerevisiae SacCer2 genome; 2. random sequence library of 12,472 sequences generated with equal expected frequency of A/C/GT; 3. a tiling library 82,368 sequences from 576 genes that were selected from yeast genome whose ORFs ends were both mapped with high confidence, among which the first 297 were randomly chosen and the subsequent 279 had highest expression values. For each gene, the +1 nucleosome dyad position +/- 2,000 bp region was first selected, and 50 bp sequences within this region were extracted with tiling spacing of 7 bp; and 4. yeast ChrV library of 82,404 50 bp sequences tiled with 7bp spacing.
-
-The fifth data set was from an independent in vitro study for DNA propensity for looping (Rosanio et al 2015). The initial library L0 contained ~2.4x10^15 species of 90 bp DNA fragments synthesized randomly. The subsequent libraries L1, L2, …, L6 contained 90 bp DNA fragments that successfully formed loops in previous rounds under different experimental conditions. For L0 - L3, the reaction volume remained constant as 2.18 l, while the ligation time monotonically decreased from 30 min, 15 min, 10 min to 4 min sequentially. For L4, L5 the reaction volume was reduced to 500 ml and the ligation time decreased to 1 min and 10 s respectively. We randomly selected 100,000 fragments from each library to evaluate the prediction of DNAcycP.
-
-Experimented various deep learning architectures on different data sets, the final IR+LSTM model is trained by the tiling library.
-
-## Required package
+## DNAcycP required packages
 
 * `bio==1.3.3`
 * `tensorflow==2.7.0`
@@ -44,9 +35,11 @@ Experimented various deep learning architectures on different data sets, the fin
 * `numpy==1.21.5`
 * `docopt==0.6.2`
 
+
 ## Installation
 
-DNAcycP requires specific versions of dependencies. It is recommended to install and run DNAcycP in a virtual environment. For example, suppose the downloaded DNAcycP package unpacked as a folder `dnacycp-main`. We can install DNAcycP in a virtual environment as below:
+**DNAcycP** Python package requires specific versions of dependencies. We recommend to install and run **DNAcycP** in a virtual environment. For example, suppose the downloaded DNAcycP package is unpacked as a folder `dnacycp-main`. We can install DNAcycP in a virtual environment as below:
+
 ```bash
 cd dnacycp-main
 python3 -m venv env
@@ -54,17 +47,18 @@ source env/bin/activate test
 pip install -e .
 ```
 
-Run `dnacycp-cli ` directly to see whether it is installed properly.
+Run `dnacycp-cli ` to see whether it is installed properly.
+
 ```bash
 dnacycp-cli 
 ```
 
-After call of DNAcycP, you may want to close the virtual environment by using
+Once done with DNAcycP for prediction, you can close the virtual environment by using:
 ```bash
 deactivate
 ```
 
-To reuse DNAcycP in the already set virtual environment, run
+Once the virtual environment is deactivated, you need to re-activate it before you run another session of prediciotn as follows:
 ```bash
 cd dnacycp-main
 source env/bin/activate test
@@ -72,36 +66,47 @@ source env/bin/activate test
 
 ## Usage
 
-DNAcycP supports two modes of input: FASTA format (with sequence name lines beginning with “>”) and plain TEXT format.
+DNAcycP supports the input sequence in two formats: FASTA format (with sequence name line beginning with “>”) or plain TXT format. Unlike in the web server version where only one sequence is allowed in input for prediction, the Python package allows multiple sequences in the same input file. In particular for the TXT format, each line (can be of different length) in the file is regarded as one input sequence for prediction. 
 
-To call FASTA format mode, specify argument `-f`, followed by input file and base name (path) of output. For each sequence of length n>=50 bp, DNAcycP predicts the C-score for every 50 bp. Regardless of the input sequence format the first C-score in the output file corresponds to the sequence from position 1-50, second for 2-51 and so forth. Output of each sequence is a text file with columns `position` and `c-score`, stored in an individual file.
+The main funciton in DNAcycP is `dancycp-cli`, which can be called as follows:
 ```bash
-dnacycp-cli -f <inputfile> <basename>
+dnacycp-cli -f/-t <inputfile> <basename>
 ```
-Example 1:
-```bash
-dnacycp-cli -f data/raw/ex1.fasta ex1
-```
+where 
+  * `-f/-t`: indicates the input file name in FASTA or TXT format respectively; either one must be specified.
+  * `<inputfile>`: is the name of the intput file;
+  * `<basename>`: is the name base for the output file.
 
-To call TEXT format mode, specify argument `-t`, followed by input file and base name (path) of output. In TEXT format, each line (can be of different length) in the file is regarded as one input sequence for prediction. 
-```bash
-dnacycp-cli -t <inputfile> <basename>
-```
-Example 2:
-```bash
-dnacycp-cli -t data/raw/ex2.txt ex2
-```
+### Example 1:
 
-### Arguments:   
-  * `<inputfile>`: input file name
-  * `<basename>`: prediction output file name base
-  * `-h`: show help screen 
-  * `-f`: FASTA format mode 
-  * `-t`: TEXT format mode 
+```bash
+dnacycp-cli -f ./data/raw/ex1.fasta ./data/raw/ex1
+```
+The `-f` option specifies that the input file named "ex1.fasta" is in fasta format. 
+The `./data/raw/ex1.fasta` is the sequence file path and name, and `./data/raw/ex1` specifies the output file will be saved in the directory `./data/raw` with file name initialized with `ex1`.
+For example, `ex1.fasta` contains two sequences named ">seq1" and ">myseq2" respectively.
+The output file will be named as "ex1_cycle_seq1.txt", "ex1_cycle_myseq2.txt"for the first and second sequences respectively. Each file contains three columns: `position`, `C_score_norm`, `C_score_unnorm`. The `C_score_norm` is the predicted C-score from the model trained based on the standardized loop-seq score of the tiling library of Basu et al 2021 (i.e. 0 mean unit variance). The `C_score_unnorm` is the predicted C-score recovered to the original scale of loop-seq score in the tiling library data from Basu et el 2021. The standardized loop-seq score provides two advantages. As loop-seq may be subject to a library-specific constant, standardized C-score is defined with a unified baseline as yeast genome (i.e. 0 mean in yeast genome). Secondly, the C-score provides statisitcal significance indicator, i.e. a C-score of 1.96 indicates 97.5% in the distribution.
 
-### Python package usage
+
+### Example 2:
+
+```bash
+dnacycp-cli -t ./data/raw/ex2.txt ./data/raw/ex2
+```
+With `-t` option, the input file is regarded as in TXT format, each line representing a sequence without sequence name line that begins with ">".
+The predicted C-scores will be saved into two files, one with `_unnorm.txt` and the other with `_norm.txt` for unnormalized and normalized C-score, with C-scores in each line corresponding to the sequence in the input file in the same order.
+
+For any input sequence, DNAcycP predicts the C-score for every 50 bp. Regardless of the input sequence format the first C-score in the output file corresponds to the sequence from position 1-50, second for 2-51 and so forth.
+
+### Run prediction within Python interactive session
+
 ```python
 from dnacycp import cycle_fasta, cycle_txt
 cycle_fasta("data/raw/ex1.fasta","example1")
 cycle_txt("data/raw/ex2.txt","example2")
 ```
+
+
+## Other References
+
+* Basu, A., Bobrovnikov, D.G., Qureshi, Z., Kayikcioglu, T., Ngo, T.T.M., Ranjan, A., Eustermann, S., Cieza, B., Morgan, M.T., Hejna, M. et al. (2021) Measuring DNA mechanics on the genome scale. Nature, 589, 462-467.
